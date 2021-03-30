@@ -1,24 +1,16 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const cors = require("cors");
+const io = require("socket.io")(http);
 
-var io = require("socket.io")(http, {
-  handlePreflightRequest: (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "*");
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
 
-    if (req.method === "OPTIONS") {
-      res.header(
-        "Access-Control-Allow-Methods",
-        "PUT, POST, PATCH, DELETE, OPTIONS"
-      );
-      res.header("Access-Control-Max-Age", 120);
-      return res.status(200).json({});
-    }
-    next();
-  },
-});
-app.use(cors());
+app.options("*", cors());
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
