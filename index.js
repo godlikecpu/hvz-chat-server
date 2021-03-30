@@ -3,14 +3,19 @@ const http = require("http").createServer(app);
 const cors = require("cors");
 
 var io = require("socket.io")(http, {
-  handlePreflightRequest: (req, res) => {
-    const headers = {
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, jwt",
-      "Access-Control-Allow-Origin": "*", //or the specific origin you want to give access to,
-      "Access-Control-Allow-Credentials": true,
-    };
-    res.writeHead(200, headers);
-    res.end();
+  handlePreflightRequest: (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "*");
+
+    if (req.method === "OPTIONS") {
+      res.header(
+        "Access-Control-Allow-Methods",
+        "PUT, POST, PATCH, DELETE, OPTIONS"
+      );
+      res.header("Access-Control-Max-Age", 120);
+      return res.status(200).json({});
+    }
+    next();
   },
 });
 app.use(cors());
