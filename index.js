@@ -1,15 +1,5 @@
 const app = require("express")();
-var fs = require("fs");
-const https = require("https").createServer(
-  {
-    key: fs.readFileSync("./test_key.key"),
-    cert: fs.readFileSync("./test_cert.crt"),
-    ca: fs.readFileSync("./test_ca.crt"),
-    requestCert: false,
-    rejectUnauthorized: false,
-  },
-  app
-);
+const https = require("https").createServer(app);
 
 const io = require("socket.io")(https, {
   cors: {
