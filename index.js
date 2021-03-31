@@ -15,10 +15,12 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log("a user connected");
 
-  socket.on("message", (data) => {
-    console.log(data.user + ": " + data.message);
-    socket.emit("message", data);
-    socket.broadcast.emit("message", data);
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+
+  socket.on("message", (msg) => {
+    console.log("message: " + msg);
   });
 });
 
