@@ -1,8 +1,12 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const cors = require("cors");
-const io = require("socket.io")(http);
-
+const io = require("socket.io")(http, {
+  cors: {
+    origin: "*",
+  },
+});
+io.origins("*:*");
 app.use(
   cors({
     credentials: true,
@@ -26,6 +30,6 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(process.env.PORT || 3000, () => {
+http.listen(process.env.PORT | 3000, () => {
   console.log("listening on *:3000");
 });
