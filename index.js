@@ -1,7 +1,16 @@
 const app = require("express")();
-const http = require("http").createServer(app);
+const https = require("https").createServer(
+  {
+    key: fs.readFileSync("./test_key.key"),
+    cert: fs.readFileSync("./test_cert.crt"),
+    ca: fs.readFileSync("./test_ca.crt"),
+    requestCert: false,
+    rejectUnauthorized: false,
+  },
+  app
+);
 
-const io = require("socket.io")(http, {
+const io = require("socket.io")(https, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -24,6 +33,6 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(process.env.PORT || 3000, () => {
+https.listen(process.env.PORT || 3000, () => {
   console.log("listening on *:3000");
 });
